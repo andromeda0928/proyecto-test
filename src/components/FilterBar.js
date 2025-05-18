@@ -5,29 +5,38 @@ import { Range, getTrackBackground } from 'react-range'
 /**
  * FilterBar Component
  * Props:
- * - filters: {
- *     location, type, status,
- *     priceMin, priceMax,
- *     bedrooms, bathrooms, parking,
- *     sqftMin, sqftMax, lotMin, lotMax
- *   }
+ * - filters: { location, type, status, priceMin, priceMax, bedrooms, bathrooms, parking, sqftMin, sqftMax, lotMin, lotMax }
  * - onFilterChange: (newFilters) => void
- * - options: {
- *     locations: string[],
- *     types: string[],
- *     statuses: string[],
- *     bedrooms: number[],
- *     bathrooms: number[],
- *     parking: number[]
- *   }
+ * - options: { locations: string[], types: string[], statuses: string[], bedrooms: number[], bathrooms: number[], parking: number[] }
+ * - minPrice, maxPrice, minSqft, maxSqft, minLot, maxLot: number
  */
-export default function FilterBar({ filters, onFilterChange, options }) {
-  const MIN = 1000
-  const MAX = 1000000
+export default function FilterBar({
+  filters,
+  onFilterChange,
+  options,
+  minPrice,
+  maxPrice,
+  minSqft,
+  maxSqft,
+  minLot,
+  maxLot
+}) {
+  // asignamos rangos dinámicos
+  const MIN = minPrice
+  const MAX = maxPrice
 
-  // Cuando cambian ambos valores del slider
+  // valores a mostrar en slider
+  const sliderValues = [
+    filters.priceMin !== '' ? filters.priceMin : MIN,
+    filters.priceMax !== '' ? filters.priceMax : MAX
+  ]
+
   const onPriceChange = ([newMin, newMax]) => {
-    onFilterChange({ ...filters, priceMin: newMin, priceMax: newMax })
+    onFilterChange({
+      ...filters,
+      priceMin: newMin === MIN ? '' : newMin,
+      priceMax: newMax === MAX ? '' : newMax
+    })
   }
 
   const handleSelect = key => e =>
@@ -38,40 +47,48 @@ export default function FilterBar({ filters, onFilterChange, options }) {
     onFilterChange({ ...filters, [key]: v === '' ? '' : Number(v) })
   }
 
+  // helpers para formato
+  const displayMinPrice = sliderValues[0]
+  const displayMaxPrice = sliderValues[1]
+
   return (
     <div className="filter-bar">
-      {/* ubicación / tipología / venta-renta */}
+      {/* Ubicación */}
       <select value={filters.location} onChange={handleSelect('location')}>
         <option value="">Ubicación</option>
         {options.locations.map(l => (
           <option key={l} value={l}>{l}</option>
         ))}
       </select>
+
+      {/* Tipología */}
       <select value={filters.type} onChange={handleSelect('type')}>
         <option value="">Tipología</option>
         {options.types.map(t => (
           <option key={t} value={t}>{t}</option>
         ))}
       </select>
+
+      {/* Estatus */}
       <select value={filters.status} onChange={handleSelect('status')}>
-        <option value="">Venta / Alquiler</option>
+        <option value="">Estatus</option>
         {options.statuses.map(s => (
           <option key={s} value={s}>{s}</option>
         ))}
       </select>
 
-      {/* slider dual con react-range */}
+      {/* Slider dual */}
       <div className="price-wrapper">
         <label className="price-label">
           Precio:&nbsp;
-          <strong>${filters.priceMin.toLocaleString()}</strong>&nbsp;–&nbsp;
-          <strong>${filters.priceMax.toLocaleString()}</strong>
+          <strong>${displayMinPrice.toLocaleString()}</strong>&nbsp;–&nbsp;
+          <strong>${displayMaxPrice.toLocaleString()}</strong>
         </label>
         <Range
           step={1000}
           min={MIN}
           max={MAX}
-          values={[filters.priceMin, filters.priceMax]}
+          values={sliderValues}
           onChange={onPriceChange}
           renderTrack={({ props, children }) => (
             <div
@@ -81,7 +98,7 @@ export default function FilterBar({ filters, onFilterChange, options }) {
                 height: '6px',
                 width: '100%',
                 background: getTrackBackground({
-                  values: [filters.priceMin, filters.priceMax],
+                  values: sliderValues,
                   colors: ['#ddd', '#2a9d8f', '#ddd'],
                   min: MIN,
                   max: MAX
@@ -109,27 +126,31 @@ export default function FilterBar({ filters, onFilterChange, options }) {
             >
               <div style={{ position: 'absolute', top: '-24px', fontSize: '0.75rem' }}>
                 {index === 0
-                  ? `$${filters.priceMin.toLocaleString()}`
-                  : `$${filters.priceMax.toLocaleString()}`}
+                  ? `$${displayMinPrice.toLocaleString()}`
+                  : `$${displayMaxPrice.toLocaleString()}`}
               </div>
             </div>
           )}
         />
       </div>
 
-      {/* recámaras / baños / estacionamientos */}
+      {/* Recámaras */}
       <select value={filters.bedrooms} onChange={handleNum('bedrooms')}>
         <option value="">Recámaras</option>
         {options.bedrooms.map(n => (
           <option key={n} value={n}>{n}</option>
         ))}
       </select>
+
+      {/* Baños */}
       <select value={filters.bathrooms} onChange={handleNum('bathrooms')}>
         <option value="">Baños</option>
         {options.bathrooms.map(n => (
           <option key={n} value={n}>{n}</option>
         ))}
       </select>
+
+      {/* Estacionamientos */}
       <select value={filters.parking} onChange={handleNum('parking')}>
         <option value="">Estac.</option>
         {options.parking.map(n => (
@@ -137,28 +158,30 @@ export default function FilterBar({ filters, onFilterChange, options }) {
         ))}
       </select>
 
-      {/* áreas */}
+      {/* Área construcción */}
       <input
         type="number"
-        placeholder="Min sqft"
+        placeholder={`Min sqft (${minSqft})`}
         value={filters.sqftMin}
         onChange={handleNum('sqftMin')}
       />
       <input
         type="number"
-        placeholder="Max sqft"
+        placeholder={`Max sqft (${maxSqft})`}
         value={filters.sqftMax}
         onChange={handleNum('sqftMax')}
       />
+
+      {/* Área lote */}
       <input
         type="number"
-        placeholder="Min lote"
+        placeholder={`Min lote (${minLot})`}
         value={filters.lotMin}
         onChange={handleNum('lotMin')}
       />
       <input
         type="number"
-        placeholder="Max lote"
+        placeholder={`Max lote (${maxLot})`}
         value={filters.lotMax}
         onChange={handleNum('lotMax')}
       />
