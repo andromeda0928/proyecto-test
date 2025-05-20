@@ -5,64 +5,18 @@ import { useRouter } from 'next/router'
 import { useState, useMemo } from 'react'
 
 import FilterBar from '@/components/FilterBar/FilterBar'
-import Card from '@/components/Card/Card'
+import Card      from '@/components/Card/Card'
 import Pagination from '@/components/Pagination/Pagination'
+
+// Importamos la función de fetch desde el módulo separado
+import { fetchAllProperties } from '@/lib/Airtable'
 
 const PAGE_SIZE = 40
 
 export async function getStaticProps() {
-  const API_KEY    = process.env.AIRTABLE_API_KEY
-  const BASE_ID    = process.env.AIRTABLE_BASE_ID
-  const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME
-  const API_URL    = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`
-
-  let allRecords = []
-  let offset
-
-  // Trae todos los registros de 100 en 100
-  do {
-    const params = new URLSearchParams({ pageSize: '100' })
-    if (offset) params.set('offset', offset)
-
-    const res = await fetch(`${API_URL}?${params}`, {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    if (!res.ok) break
-
-    const { records, offset: nextOffset } = await res.json()
-    allRecords.push(...records)
-    offset = nextOffset
-  } while (offset)
-
-  const properties = allRecords.map(r => {
-    const f = r.fields || {}
-    const titles = typeof f.title === 'string'
-      ? f.title.split(',').map(s => s.trim())
-      : []
-
-    return {
-      id:             r.id,
-      street_name:    f.street_name   || '—',
-      map_area:       f.map_area      || '—',
-      property_type:  f.property_type || '—',
-      titles,
-      price_current:  f.price_current || 0,
-      bedrooms:       f.bedrooms      || 0,
-      bathrooms:      f.bathrooms     || 0,
-      parking_spaces: f.parking_spaces|| 0,
-      sqft_total:     f.sqft_total    || 0,
-      lot_sqft:       f.lot_sqft      || 0,
-      urlImgs: Array.isArray(f.url_img)
-        ? f.url_img
-        : typeof f.url_img === 'string'
-          ? f.url_img.split(',').map(s => s.trim())
-          : [],
-    }
-  })
-
+  // Solo esta línea en index.js; el resto vive en src/lib/airtable.js
+  const properties = await fetchAllProperties(process.env.AIRTABLE_TABLE_NAME)
+  
   return {
     props:      { properties },
     revalidate: 60,
@@ -95,11 +49,11 @@ export default function Catalog({ properties }) {
 
   // Estado de filtros
   const [filters, setFilters] = useState({
-    location: '', type: '', status: '',
-    priceMin: '', priceMax: '',
-    bedrooms: '', bathrooms: '', parking: '',
-    sqftMin: '', sqftMax: '',
-    lotMin: '', lotMax: '',
+    location:'', type:'', status:'',
+    priceMin:'', priceMax:'',
+    bedrooms:'', bathrooms:'', parking:'',
+    sqftMin:'', sqftMax:'',
+    lotMin:'', lotMax:'',
   })
 
   // Filtrado
@@ -122,7 +76,7 @@ export default function Catalog({ properties }) {
       if (p.sqft_total < minS || p.sqft_total > maxS) return false
 
       const minL = filters.lotMin !== '' ? filters.lotMin : minLot
-      const maxL = filters.lotMax !== '' ? filters.lotMax : maxLot
+      const maxL = filters.lotMax !== '' ? filters.lotLot : maxLot
       if (p.lot_sqft < minL || p.lot_sqft > maxL) return false
 
       return true
@@ -134,7 +88,7 @@ export default function Catalog({ properties }) {
   const start      = (pageNum - 1) * PAGE_SIZE
   const paged      = filtered.slice(start, start + PAGE_SIZE)
 
-  // Construye páginas compactas
+  // Páginas compactas
   const delta = 2
   const pagesArray = []
   for (let i = 1; i <= totalPages; i++) {
@@ -171,9 +125,7 @@ export default function Catalog({ properties }) {
 
       <main>
         <ul className="grid">
-          {paged.map(p => (
-            <Card key={p.id} property={p} />
-          ))}
+          {paged.map(p => <Card key={p.id} property={p} />)}
         </ul>
 
         <Pagination
