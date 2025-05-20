@@ -2,7 +2,8 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useMemo } from 'react'
-import FilterBar from '@/components/FilterBar'
+import FilterBar from '@/components/FilterBar/FilterBar'
+import Card from '@/components/Card/Card'
 
 const PAGE_SIZE = 40
 
@@ -176,27 +177,7 @@ export default function Catalog({ properties }) {
 
       <main>
         <ul className="grid">
-          {paged.map(p => {
-            const thumb = p.urlImgs[0]
-              ? `https://panama-green.com/wp-content/uploads/wpallimport/files/${p.urlImgs[0]}`
-              : null
-            return (
-              <li key={p.id}>
-                <a href={`/${p.id}`} className="card">
-                  {thumb
-                    ? <img src={thumb} alt={p.street_name} className="thumb" />
-                    : <div className="thumb-placeholder">Sin imagen</div>
-                  }
-                  <div className="card-body">
-                    <h2>{p.street_name}</h2>
-                    <p className="location">{p.map_area}</p>
-                    <p className="type">{p.property_type}</p>
-                    <p className="price">${p.price_current.toLocaleString()}</p>
-                  </div>
-                </a>
-              </li>
-            )
-          })}
+          {paged.map(p => <Card key={p.id} property={p} />)}
         </ul>
 
         <nav className="pagination">
