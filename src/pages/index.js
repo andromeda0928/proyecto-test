@@ -1,9 +1,12 @@
-// src/pages/index.js
+// File: src/pages/index.js
+
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useMemo } from 'react'
+
 import FilterBar from '@/components/FilterBar/FilterBar'
 import Card from '@/components/Card/Card'
+import Pagination from '@/components/Pagination/Pagination'
 
 const PAGE_SIZE = 40
 
@@ -71,7 +74,7 @@ export default function Catalog({ properties }) {
   const { page = '1' } = router.query
   const pageNum = Math.max(1, parseInt(page, 10) || 1)
 
-  // Opciones para selects
+  // Opciones para filtros
   const types     = useMemo(() => [...new Set(properties.map(p => p.property_type))], [properties])
   const locations = useMemo(() => [...new Set(properties.map(p => p.map_area))], [properties])
   const statuses  = useMemo(() => [...new Set(properties.flatMap(p => p.titles))], [properties])
@@ -79,7 +82,7 @@ export default function Catalog({ properties }) {
   const bathrooms = [1,2,3,4,5]
   const parking   = [0,1,2,3,4,5]
 
-  // BOUNDS para slider
+  // Límites para sliders
   const priceList = properties.map(p => p.price_current)
   const minPrice  = Math.min(...priceList)
   const maxPrice  = Math.max(...priceList)
@@ -90,23 +93,16 @@ export default function Catalog({ properties }) {
   const minLot    = Math.min(...lotList)
   const maxLot    = Math.max(...lotList)
 
-  // Estado de filtros, vacíos por defecto
+  // Estado de filtros
   const [filters, setFilters] = useState({
-    location:   '',
-    type:       '',
-    status:     '',
-    priceMin:   '',
-    priceMax:   '',
-    bedrooms:   '',
-    bathrooms:  '',
-    parking:    '',
-    sqftMin:    '',
-    sqftMax:    '',
-    lotMin:     '',
-    lotMax:     '',
+    location: '', type: '', status: '',
+    priceMin: '', priceMax: '',
+    bedrooms: '', bathrooms: '', parking: '',
+    sqftMin: '', sqftMax: '',
+    lotMin: '', lotMax: '',
   })
 
-  // Filtrado: si filtro vacío → usa rango completo; si setea valor → filtra
+  // Filtrado
   const filtered = useMemo(() => {
     return properties.filter(p => {
       if (filters.location && p.map_area !== filters.location) return false
@@ -115,22 +111,19 @@ export default function Catalog({ properties }) {
 
       const minP = filters.priceMin !== '' ? filters.priceMin : minPrice
       const maxP = filters.priceMax !== '' ? filters.priceMax : maxPrice
-      if (p.price_current < minP) return false
-      if (p.price_current > maxP) return false
+      if (p.price_current < minP || p.price_current > maxP) return false
 
-      if (filters.bedrooms   && p.bedrooms      !== filters.bedrooms) return false
-      if (filters.bathrooms  && p.bathrooms     !== filters.bathrooms) return false
-      if (filters.parking    && p.parking_spaces!== filters.parking)   return false
+      if (filters.bedrooms && p.bedrooms !== filters.bedrooms) return false
+      if (filters.bathrooms&& p.bathrooms !== filters.bathrooms) return false
+      if (filters.parking  && p.parking_spaces !== filters.parking) return false
 
       const minS = filters.sqftMin !== '' ? filters.sqftMin : minSqft
       const maxS = filters.sqftMax !== '' ? filters.sqftMax : maxSqft
-      if (p.sqft_total < minS) return false
-      if (p.sqft_total > maxS) return false
+      if (p.sqft_total < minS || p.sqft_total > maxS) return false
 
       const minL = filters.lotMin !== '' ? filters.lotMin : minLot
       const maxL = filters.lotMax !== '' ? filters.lotMax : maxLot
-      if (p.lot_sqft < minL) return false
-      if (p.lot_sqft > maxL) return false
+      if (p.lot_sqft < minL || p.lot_sqft > maxL) return false
 
       return true
     })
@@ -140,12 +133,8 @@ export default function Catalog({ properties }) {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const start      = (pageNum - 1) * PAGE_SIZE
   const paged      = filtered.slice(start, start + PAGE_SIZE)
-  const goTo = p => {
-    if (p < 1 || p > totalPages) return
-    router.push(`/?page=${p}`, undefined, { shallow: true })
-  }
 
-  // Páginas compactas
+  // Construye páginas compactas
   const delta = 2
   const pagesArray = []
   for (let i = 1; i <= totalPages; i++) {
@@ -154,6 +143,11 @@ export default function Catalog({ properties }) {
     } else if (pagesArray[pagesArray.length - 1] !== '...') {
       pagesArray.push('...')
     }
+  }
+
+  const handlePageChange = p => {
+    if (p < 1 || p > totalPages) return
+    router.push(`/?page=${p}`, undefined, { shallow: true })
   }
 
   return (
@@ -177,22 +171,17 @@ export default function Catalog({ properties }) {
 
       <main>
         <ul className="grid">
-          {paged.map(p => <Card key={p.id} property={p} />)}
+          {paged.map(p => (
+            <Card key={p.id} property={p} />
+          ))}
         </ul>
 
-        <nav className="pagination">
-          <button onClick={() => goTo(pageNum - 1)} disabled={pageNum === 1} className="page-btn">‹</button>
-          {pagesArray.map((p, idx) =>
-            p === '...'
-              ? <span key={idx} className="dots">…</span>
-              : <button
-                  key={idx}
-                  onClick={() => goTo(p)}
-                  className={`page-btn${p === pageNum ? ' active' : ''}`}
-                >{p}</button>
-          )}
-          <button onClick={() => goTo(pageNum + 1)} disabled={pageNum === totalPages} className="page-btn">›</button>
-        </nav>
+        <Pagination
+          pageNum={pageNum}
+          totalPages={totalPages}
+          pagesArray={pagesArray}
+          onPageChange={handlePageChange}
+        />
       </main>
 
       <style jsx>{`
@@ -209,54 +198,6 @@ export default function Catalog({ properties }) {
           padding: 0;
           margin: 0;
         }
-        .card {
-          display: flex;
-          flex-direction: column;
-          background: #fff;
-          border-radius: 8px;
-          overflow: hidden;
-          text-decoration: none;
-          color: inherit;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          transition: transform .2s;
-        }
-        .card:hover { transform: translateY(-4px); }
-        .thumb {
-          width: 100%;
-          height: 160px;
-          object-fit: cover;
-        }
-        .thumb-placeholder {
-          width:100%; height:160px;
-          background:#eee;
-          display:flex; align-items:center; justify-content:center;
-          color:#999;
-        }
-        .card-body {
-          padding:1rem;
-          display:flex; flex-direction:column; flex:1;
-        }
-        .location, .type {
-          margin:0 0 .5rem;
-          color:#666; font-size:.9rem;
-        }
-        .price {
-          margin-top:auto;
-          font-weight:bold; color:#2a9d8f;
-        }
-
-        .pagination {
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          flex-wrap:wrap;
-          gap:.5rem;
-          margin:2rem 0;
-        }
-        .page-btn { background:white; border:1px solid #ccc; padding:.5rem .75rem; border-radius:4px; cursor:pointer; }
-        .page-btn:disabled { opacity:.5; cursor:default; }
-        .page-btn.active { background:#2a9d8f; color:white; border-color:#2a9d8f; }
-        .dots { padding:.5rem .75rem; color:#666; pointer-events:none; }
       `}</style>
     </>
   )
