@@ -1,0 +1,56 @@
+/* File: src/components/Layout/Layout.module.css */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.9rem 1rem;
+  background-color: #ffffff;
+  /* Sombra ligera para separar del contenido */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  /* Fijo arriba si quieres que se quede al hacer scroll */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Hace clickeable el área del logo y centra su contenido */
+.logoLink {
+  display: flex;
+  align-items: center;
+}
+
+/* Contenedor que define ancho/alto del logo para Image(fill) */
+.logoWrapper {
+  position: relative;
+  width: 2.5rem;   /* ancho deseado */
+  height: 2.5rem;  /* alto deseado */
+}
+
+/* La propia imagen: mantiene proporción sin deformarse */
+.logoImage {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Estilos para el botón “REGRESAR” */
+.backButton {
+  display: inline-block;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--color-primary); /* morado vibrante */
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1;
+  transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: var(--color-primary);
+}
+
+/* .main {
+  padding-top: 4rem;
+} */

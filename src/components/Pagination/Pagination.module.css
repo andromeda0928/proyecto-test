@@ -1,18 +1,29 @@
+/* File: src/components/Pagination/Pagination.module.css */
+
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 0.5rem;
   margin: 2rem 0;
 }
 
 .pageBtn {
-  background: white;
-  border: 1px solid #ccc;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
+  /* Círculo uniforme */
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: var(--color-gray-light);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: var(--fw-semibold);
+  color: var(--color-black);
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 .pageBtn:disabled {
@@ -21,13 +32,17 @@
 }
 
 .active {
-  background: #2a9d8f;
-  color: white;
-  border-color: #2a9d8f;
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .dots {
-  padding: 0.5rem 0.75rem;
-  color: #666;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--color-black);
   pointer-events: none;
 }
