@@ -16,7 +16,7 @@ export default function Layout({ children }) {
         >
           <div className={styles.logoWrapper}>
             <Image
-              src="/Logo-Andromeda-Blanco-1024x907.webp"
+              src="/logo.png"
               alt="Andrómeda HL Studio"
               fill
               className={styles.logoImage}
