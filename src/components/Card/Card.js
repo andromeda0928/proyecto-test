@@ -31,22 +31,37 @@ export default function Card({ property }) {
           <p className={styles.subtitle}>{property.map_area}</p>
 
           <div className={styles.pills}>
-            <div className={styles.pill}>
-              <FaBed size={12} className={styles.pillIcon} />
-              <span>{property.bedrooms}</span>
-            </div>
-            <div className={styles.pill}>
-              <FaBath size={12} className={styles.pillIcon} />
-              <span>{property.bathrooms}</span>
-            </div>
-            <div className={styles.pill}>
-              <FaRulerCombined size={12} className={styles.pillIcon} />
-              <span>{property.sqft_total}M2</span>
-            </div>
-            <div className={styles.pill}>
-              <FaMapMarkerAlt size={12} className={styles.pillIcon} />
-              <span>{property.lot_sqft}M2</span>
-            </div>
+            {/* Mostrar solo si bedrooms > 0 */}
+            {property.bedrooms > 0 && (
+              <div className={styles.pill}>
+                <FaBed size={14} className={styles.pillIcon} />
+                <span>{property.bedrooms}</span>
+              </div>
+            )}
+
+            {/* Mostrar solo si bathrooms > 0 */}
+            {property.bathrooms > 0 && (
+              <div className={styles.pill}>
+                <FaBath size={14} className={styles.pillIcon} />
+                <span>{property.bathrooms}</span>
+              </div>
+            )}
+
+            {/* Mostrar solo si sqft_total > 0 */}
+            {property.sqft_total > 0 && (
+              <div className={styles.pill}>
+                <FaRulerCombined size={14} className={styles.pillIcon} />
+                <span>{property.sqft_total}M2</span>
+              </div>
+            )}
+
+            {/* Mostrar solo si lot_sqft > 0 */}
+            {property.lot_sqft > 0 && (
+              <div className={styles.pill}>
+                <FaMapMarkerAlt size={14} className={styles.pillIcon} />
+                <span>{property.lot_sqft}M2</span>
+              </div>
+            )}
           </div>
 
           <p className={styles.price}>
