@@ -48,7 +48,7 @@
 /* Título principal */
 .title {
   font-family: var(--font-primary);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: var(--fw-black);
   text-transform: uppercase;
   color: var(--color-black);
@@ -57,7 +57,7 @@
 
 /* Subtítulo / Ubicación */
 .subtitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--color-black);
   margin-top: -5px;
 }

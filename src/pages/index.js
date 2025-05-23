@@ -11,7 +11,7 @@ import Pagination from '@/components/Pagination/Pagination'
 // Importamos la función de fetch desde el módulo separado
 import { fetchAllProperties } from '@/lib/Airtable'
 
-const PAGE_SIZE = 40
+const PAGE_SIZE = 20
 
 export async function getStaticProps() {
   // Solo esta línea en index.js; el resto vive en src/lib/airtable.js
