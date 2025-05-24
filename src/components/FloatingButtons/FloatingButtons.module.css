@@ -1,0 +1,52 @@
+/* Contenedor de ambos botones (no visible, solo para organización si deseas usarlo luego) */
+.container {
+  position: fixed;
+  bottom: 4rem;
+  z-index: 1000;
+  width: 100%; /* para permitir extremos opuestos */
+  pointer-events: none; /* permite que solo los hijos reciban eventos */
+}
+
+/* Botón de WhatsApp (izquierda) */
+.whatsapp {
+  position: absolute;
+  left: 1.5rem;
+  pointer-events: auto;
+  background-color: #a000f4;
+  color: #fff;
+  border-radius: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: background 0.2s ease;
+}
+
+.whatsapp:hover {
+  background-color: #7b00c6;
+}
+
+/* Botón de scroll arriba (derecha) */
+.scrollTop {
+  position: absolute;
+  right: 1.5rem;
+  pointer-events: auto;
+  background-color: #a000f4;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: background 0.2s ease;
+}
+
+.scrollTop:hover {
+  background-color: #7b00c6;
+}

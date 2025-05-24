@@ -1,9 +1,9 @@
 // File: src/components/Layout/Layout.js
 import React from 'react'
 import Image from 'next/image'
-import styles from './Layout.module.css'
+import styles from './Header.module.css'
 
-export default function Layout({ children }) {
+export default function Header({ children }) {
   return (
     <>
       <header className={styles.header}>
