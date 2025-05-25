@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa'
 
 const IMG_BASE_URL = 'https://panama-green.com/wp-content/uploads/images_mls'
+// const IMG_BASE_URL = 'https://mls-images.b-cdn.net'
 
 function getFirstImageUrl(uniqueId) {
   if (!uniqueId) return null

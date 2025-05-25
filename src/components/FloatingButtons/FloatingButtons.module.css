@@ -12,7 +12,7 @@
   position: absolute;
   left: 1.5rem;
   pointer-events: auto;
-  background-color: #a000f4;
+  background-color: var(--color-primary);
   color: #fff;
   border-radius: 50%;
   width: 3.2rem;
@@ -25,7 +25,8 @@
 }
 
 .whatsapp:hover {
-  background-color: #7b00c6;
+  background-color: var(--color-primary);
+  /* background-color: #7b00c6; */
 }
 
 /* Botón de scroll arriba (derecha) */
@@ -33,7 +34,7 @@
   position: absolute;
   right: 1.5rem;
   pointer-events: auto;
-  background-color: #a000f4;
+  background-color: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -48,5 +49,5 @@
 }
 
 .scrollTop:hover {
-  background-color: #7b00c6;
+  background-color: var(--color-primary);
 }
