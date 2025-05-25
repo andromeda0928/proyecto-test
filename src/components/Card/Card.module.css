@@ -1,32 +1,39 @@
-/* Elimina el estilo de lista por defecto */
+/* File: src/components/Card/Card.module.css */
+
+/* 1. Elimina el estilo de lista por defecto */
 .cardItem {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Tarjeta completa */
+/* 2. Tarjeta completa: flex-column con altura fija y overflow hidden */
 .card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;   
   background: var(--color-white);
   border-radius: 1rem;
-  overflow: hidden;
+  overflow: hidden;             /* corta cualquier desborde */
   text-decoration: none;
   color: inherit;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Imagen superior (clave: objeto ocupa todo el ancho) */
-.thumb {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
-
-/* Placeholder de imagen */
+/* 3. Imagen (o placeholder) con altura uniforme */
+.thumb,
 .thumbPlaceholder {
   width: 100%;
-  padding-top: 56.25%; /* 16:9 */
-  background: var(--color-gray-light);
+  height: 275px;                /* todas las imágenes tienen este alto */
+  display: block;
+  object-fit: cover;            /* sólo para <img> */
+  object-position: center;      /* centra el recorte */
+  background: var(--color-gray-light); /* para el placeholder */
+}
+
+/* Si usas <div class="thumbPlaceholder">, conservará el mismo tamaño */
+.thumbPlaceholder {
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,35 +41,47 @@
   font-size: 0.9rem;
 }
 
-/* Cuerpo de la tarjeta */
+/* 4. Cuerpo de la tarjeta: ocupa el espacio restante */
 .cardBody {
-  background: var(--color-gray-light);
+  flex: 1;                      /* rellena hasta completar 500px totales */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* empuja el precio al fondo */
+  align-items: center;
   padding: 1rem;
+  gap: 0.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* src/components/Card/Card.module.css */
+
+.cardHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  text-align: center;
+  gap: 0.25rem; /* espacio entre título y subtítulo */
+  /* puedes añadir más estilos aquí: margin-bottom, padding, etc. */
 }
 
-/* Título principal */
+
+/* 5. Mantén sin cambios el resto de estilos */
 .title {
   font-family: var(--font-primary);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: var(--fw-black);
   text-transform: uppercase;
   color: var(--color-black);
   line-height: 1.2;
+  margin: 0;
 }
 
-/* Subtítulo / Ubicación */
 .subtitle {
   font-size: 0.9rem;
   color: var(--color-black);
-  margin-top: -5px;
+  margin: 0;
 }
 
-/* Contenedor de los iconos con texto */
 .pills {
   display: flex;
   flex-wrap: wrap;
@@ -71,7 +90,6 @@
   margin: 0.5rem 0;
 }
 
-/* Cada “pill” */
 .pill {
   display: flex;
   align-items: center;
@@ -83,24 +101,16 @@
   font-weight: var(--fw-semibold);
 }
 
-/* Icono dentro del pill */
 .pillIcon {
-  display: flex;
   margin-right: 0.45rem;
   width: 1.2rem;  
   height: 1.2rem; 
   flex-shrink: 0;
 }
-/* Aumentar tamaño del icono */
-/* .pillIcon svg {
-  width: 1rem;   
-  height: 1rem;
-} */
 
-/* Precio destacado */
 .price {
   font-size: 1.8rem;
   font-weight: var(--fw-black);
   color: var(--color-primary);
-  margin-top: 0.5rem;
+  margin: 0;
 }

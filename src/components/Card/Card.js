@@ -8,7 +8,7 @@ import {
   FaMapMarkerAlt
 } from 'react-icons/fa'
 
-const IMG_BASE_URL = 'https://mls-images.b-cdn.net'
+const IMG_BASE_URL = 'https://panama-green.com/wp-content/uploads/images_mls'
 
 function getFirstImageUrl(uniqueId) {
   if (!uniqueId) return null
@@ -21,6 +21,7 @@ export default function Card({ property }) {
   return (
     <li className={styles.cardItem}>
       <a href={`/${property.id}`} className={styles.card}>
+
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -36,8 +37,12 @@ export default function Card({ property }) {
         )}
 
         <div className={styles.cardBody}>
-          <h2 className={styles.title}>{property.street_name}</h2>
-          <p className={styles.subtitle}>{property.map_area}</p>
+
+          {/* Nuevo contenedor para título y subtítulo */}
+          <div className={styles.cardHeader}>
+            <h2 className={styles.title}>{property.street_name}</h2>
+            <p className={styles.subtitle}>{property.map_area}</p>
+          </div>
 
           <div className={styles.pills}>
             {property.bedrooms > 0 && (
