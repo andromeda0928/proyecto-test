@@ -37,6 +37,7 @@
 }
 
 .dots {
+  /* Mantiene el mismo tamaño, pero reduce el gap efectivo */
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -45,4 +46,7 @@
   font-size: 1rem;
   color: var(--color-black);
   pointer-events: none;
+
+  /* Ajuste para acercar los puntos a los botones */
+  margin: 0 -0.75rem;
 }

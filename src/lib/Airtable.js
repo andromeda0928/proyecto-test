@@ -11,9 +11,10 @@ function mapRecord(r) {
   const f = r.fields || {}
   return {
     id:             r.id,
-    street_name:    f.street_name    || '—',
-    map_area:       f.map_area       || '—',
-    property_type:  f.property_type  || '—',
+    unique_id:      f.unique_id     || null,    // ← Añadido aquí
+    street_name:    f.street_name   || '—',
+    map_area:       f.map_area      || '—',
+    property_type:  f.property_type || '—',
     titles: Array.isArray(f.title)
       ? f.title
       : typeof f.title === 'string'

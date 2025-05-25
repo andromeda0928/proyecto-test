@@ -1,4 +1,4 @@
-// File: src/components/Card/Card.jsx
+// src/components/Card/Card.jsx
 import React from 'react'
 import styles from './Card.module.css'
 import {
@@ -8,19 +8,28 @@ import {
   FaMapMarkerAlt
 } from 'react-icons/fa'
 
+const IMG_BASE_URL = 'https://mls-images.b-cdn.net'
+
+function getFirstImageUrl(uniqueId) {
+  if (!uniqueId) return null
+  return `${IMG_BASE_URL}/${uniqueId}.L01`
+}
+
 export default function Card({ property }) {
-  const thumb = property.urlImgs[0]
-    ? `https://panama-green.com/wp-content/uploads/wpallimport/files/${property.urlImgs[0]}`
-    : null
+  const imageUrl = getFirstImageUrl(property.unique_id)
 
   return (
     <li className={styles.cardItem}>
       <a href={`/${property.id}`} className={styles.card}>
-        {thumb ? (
+        {imageUrl ? (
           <img
-            src={thumb}
+            src={imageUrl}
             alt={property.street_name}
             className={styles.thumb}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+            }}
           />
         ) : (
           <div className={styles.thumbPlaceholder}>Sin imagen</div>
@@ -31,35 +40,28 @@ export default function Card({ property }) {
           <p className={styles.subtitle}>{property.map_area}</p>
 
           <div className={styles.pills}>
-            {/* Mostrar solo si bedrooms > 0 */}
             {property.bedrooms > 0 && (
               <div className={styles.pill}>
                 <FaBed size={14} className={styles.pillIcon} />
                 <span>{property.bedrooms}</span>
               </div>
             )}
-
-            {/* Mostrar solo si bathrooms > 0 */}
             {property.bathrooms > 0 && (
               <div className={styles.pill}>
                 <FaBath size={14} className={styles.pillIcon} />
                 <span>{property.bathrooms}</span>
               </div>
             )}
-
-            {/* Mostrar solo si sqft_total > 0 */}
             {property.sqft_total > 0 && (
               <div className={styles.pill}>
                 <FaRulerCombined size={14} className={styles.pillIcon} />
-                <span>{property.sqft_total}M2</span>
+                <span>{property.sqft_total} m²</span>
               </div>
             )}
-
-            {/* Mostrar solo si lot_sqft > 0 */}
             {property.lot_sqft > 0 && (
               <div className={styles.pill}>
                 <FaMapMarkerAlt size={14} className={styles.pillIcon} />
-                <span>{property.lot_sqft}M2</span>
+                <span>{property.lot_sqft} m²</span>
               </div>
             )}
           </div>
