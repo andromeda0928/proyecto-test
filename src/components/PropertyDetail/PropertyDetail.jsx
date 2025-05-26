@@ -1,22 +1,55 @@
-// src/components/PropertyDetail/PropertyDetail.js
+// src/components/PropertyDetail/PropertyDetail.jsx
+
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import {
   FaBed,
   FaBath,
   FaCar,
   FaRulerCombined,
-  FaShareAlt,
   FaArrowLeft,
+  FaArrowRight,
   FaCheck,
 } from 'react-icons/fa'
 import styles from './PropertyDetail.module.css'
 
-export default function PropertyDetail({ record, imageUrls, waHref }) {
-  const f = record.fields || {}
-  const [current, setCurrent] = useState(0)
-  const router = useRouter()
+export default function PropertyDetail({ record, waHref }) {
+  const {
+    street_name,
+    map_area,
+    district,
+    price_current,
+    unique_id,
+    imageUrls = [],
+    bedrooms,
+    bathrooms,
+    parking_spaces,
+    sqft_total,
+    lot_sqft,
+    remarks_es = '',
+    interior_features = '',
+    exterior_features = '',
+  } = record
 
+  // Helper: convierte CSV string o array en array limpio
+  const toList = value => {
+    if (Array.isArray(value)) return value
+    if (typeof value === 'string') {
+      return value
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+    }
+    return []
+  }
+
+  // Preparamos la lista de características
+  const features = [
+    ...toList(interior_features),
+    ...toList(exterior_features),
+  ]
+
+  // Carrusel
+  const [current, setCurrent] = useState(0)
   const prev = () =>
     setCurrent(c => (c === 0 ? imageUrls.length - 1 : c - 1))
   const next = () =>
@@ -24,103 +57,99 @@ export default function PropertyDetail({ record, imageUrls, waHref }) {
 
   return (
     <div className={styles.container}>
-      {/* Botones superior */}
-      <div className={styles.topBar}>
-        <button onClick={() => router.back()} className={styles.iconBtn}>
-          <FaArrowLeft />
-        </button>
-        <button
-          onClick={() => window.open(waHref, '_blank')}
-          className={styles.shareBtn}
-        >
-          <FaShareAlt />
-        </button>
-      </div>
 
-      {/* Encabezado: título + ubicación + precio + ID */}
+      {/* HEADER */}
       <header className={styles.detailHeader}>
-        <div className={styles.titleBlock}>
-          <h2>{f.street_name}</h2>
-          <p>
-            {f.map_area}, {f.district}
-          </p>
-        </div>
-        <div className={styles.priceBlock}>
-          <p className={styles.price}>
-            ${f.price_current?.toLocaleString() || '0'}
-          </p>
-          <p className={styles.propertyId}>
-            Property ID: {record.id}
-          </p>
-        </div>
+        <h2 className={styles.title}>{street_name?.toUpperCase()}</h2>
+        <p className={styles.location}>{map_area}, {district}</p>
+        <p className={styles.price}>${price_current.toLocaleString()}</p>
+        <p className={styles.propertyId}>Property ID: {unique_id}</p>
       </header>
 
-      {/* Carrusel de imágenes + overlay stats */}
+      {/* CARRUSEL */}
       <div className={styles.carousel}>
         {imageUrls.length > 0 ? (
           <>
-            <button
-              className={`${styles.carouselBtn} ${styles.left}`}
-              onClick={prev}
-            >
-              ‹
+            <button className={`${styles.carouselBtn} ${styles.left}`} onClick={prev}>
+              <FaArrowLeft />
             </button>
             <img
+              className={styles.carouselImage}
               src={imageUrls[current]}
-              alt={f.street_name}
+              alt={street_name}
             />
-            <button
-              className={`${styles.carouselBtn} ${styles.right}`}
-              onClick={next}
-            >
-              ›
+            <button className={`${styles.carouselBtn} ${styles.right}`} onClick={next}>
+              <FaArrowRight />
             </button>
-            <div className={styles.statsOverlay}>
-              <div>
-                <FaBed /> {f.bedrooms || 0}
-              </div>
-              <div>
-                <FaBath /> {f.bathrooms || 0}
-              </div>
-              <div>
-                <FaCar /> {f.parking_spaces || 0}
-              </div>
-              <div>
-                <FaRulerCombined /> {f.sqft_total || 0} m²
-              </div>
-              <div>
-                <FaRulerCombined /> {f.lot_sqft || 0} m²
-              </div>
-            </div>
           </>
         ) : (
           <div className={styles.noImage}>No hay imágenes</div>
         )}
       </div>
 
-      {/* Descripción */}
-      <section className={styles.description}>
-        <h3>DESCRIPCIÓN</h3>
-        <p>{f.remarks_es || f.remarks || 'Sin descripción.'}</p>
-      </section>
-
-      {/* Características */}
-      <section className={styles.characteristics}>
-        <h3>CARACTERÍSTICAS</h3>
-        <div className={styles.charGrid}>
-          {[
-            ...(f.other_services || []),
-            ...(f.interior_features || []),
-            ...(f.exterior_features || []),
-          ].map((item, i) => (
-            <div key={i}>
-              <FaCheck /> {item}
+      {/* STATS */}
+      <section className={styles.statsSection}>
+        <div className={styles.statsGrid}>
+          {bedrooms > 0 && (
+            <div className={styles.statItem}>
+              <FaBed size={32}/>
+              <span className={styles.statValue}>{bedrooms}</span>
+              <span className={styles.statLabel}>Recámaras</span>
             </div>
-          ))}
+          )}
+          {bathrooms > 0 && (
+            <div className={styles.statItem}>
+              <FaBath size={32}/>
+              <span className={styles.statValue}>{bathrooms}</span>
+              <span className={styles.statLabel}>Baños</span>
+            </div>
+          )}
+          {lot_sqft > 0 && (
+            <div className={styles.statItem}>
+              <FaRulerCombined size={32}/>
+              <span className={styles.statValue}>{lot_sqft}</span>
+              <span className={styles.statLabel}>Lote (m²)</span>
+            </div>
+          )}
+          {sqft_total > 0 && (
+            <div className={styles.statItem}>
+              <FaRulerCombined size={32}/>
+              <span className={styles.statValue}>{sqft_total}</span>
+              <span className={styles.statLabel}>Construcción (m²)</span>
+            </div>
+          )}
+          {parking_spaces > 0 && (
+            <div className={`${styles.statItem} ${styles.parkingItem}`}>
+              <FaCar size={32}/>
+              <span className={styles.statValue}>{parking_spaces}</span>
+              <span className={styles.statLabel}>Parkings</span>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Botón WhatsApp */}
+      {/* DESCRIPCIÓN */}
+      <section className={styles.description}>
+        <h3>DESCRIPCIÓN</h3>
+        <p>{remarks_es}</p>
+      </section>
+
+      {/* CARACTERÍSTICAS: solo si hay al menos una */}
+      {features.length > 0 && (
+        <section className={styles.characteristics}>
+          <h3>CARACTERÍSTICAS</h3>
+          <div className={styles.charGrid}>
+            {features.map((feat, i) => (
+              <div key={i} className={styles.featureItem}>
+                <FaCheck size={20} color="#8a00e9" />
+                <span>{feat}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* WHATSAPP */}
       <a
         href={waHref}
         target="_blank"

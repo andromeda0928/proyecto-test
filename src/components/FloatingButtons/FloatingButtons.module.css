@@ -1,16 +1,17 @@
-/* Contenedor de ambos botones (no visible, solo para organización si deseas usarlo luego) */
+/* File: src/components/FloatingButtons/FloatingButtons.module.css */
 .container {
   position: fixed;
-  bottom: 4rem;
+  bottom: 0rem;
+  width: 100%;
   z-index: 1000;
-  width: 100%; /* para permitir extremos opuestos */
-  pointer-events: none; /* permite que solo los hijos reciban eventos */
+  pointer-events: none;
 }
 
-/* Botón de WhatsApp (izquierda) */
+/* WhatsApp (izquierda) */
 .whatsapp {
   position: absolute;
   left: 1.5rem;
+  bottom: 1.5rem;
   pointer-events: auto;
   background-color: var(--color-primary);
   color: #fff;
@@ -25,14 +26,38 @@
 }
 
 .whatsapp:hover {
-  background-color: var(--color-primary);
-  /* background-color: #7b00c6; */
+  background-color: var(--color-primary-hover);
 }
 
-/* Botón de scroll arriba (derecha) */
+/* Compartir (derecha, siempre visible) */
+.share {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  pointer-events: auto;
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: background 0.2s ease;
+}
+
+.share:hover {
+  /* background-color: var(--color-primary-hover); */
+}
+
+/* Subir arriba (derecha, solo tras scroll) */
 .scrollTop {
   position: absolute;
   right: 1.5rem;
+  bottom: 5rem; /* 1.5rem + 3rem (tamaño share) + 0.5rem gap */
   pointer-events: auto;
   background-color: var(--color-primary);
   color: #fff;
@@ -49,5 +74,5 @@
 }
 
 .scrollTop:hover {
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary-hover); */
 }
