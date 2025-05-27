@@ -43,5 +43,6 @@
   line-height: 1;
   transition: background-color 0.2s ease;
   font-family: poppins, sans-serif;
+  border: none;
 }
 
