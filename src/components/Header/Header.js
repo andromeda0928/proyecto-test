@@ -1,15 +1,28 @@
-// File: src/components/Layout/Layout.js
+// File: src/components/Header/Header.js
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import styles from './Header.module.css'
 
 export default function Header({ children }) {
+  const router = useRouter()
+  const defaultUrl = 'https://andromedahlstudio.com'
+
+  const handleBack = (e) => {
+    e.preventDefault()
+    if (router.pathname !== '/') {
+      router.back()
+    } else {
+      router.push(defaultUrl)
+    }
+  }
+
   return (
     <>
       <header className={styles.header}>
-        {/* Logo clickeable */}
+        {/* Logo */}
         <a
-          href="https://andromedahlstudio.com"
+          href={defaultUrl}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.logoLink}
@@ -26,17 +39,15 @@ export default function Header({ children }) {
         </a>
 
         {/* Botón “Regresar” */}
-        <a
-          href="https://andromedahlstudio.com"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={handleBack}
           className={styles.backButton}
         >
           REGRESAR
-        </a>
+        </button>
       </header>
 
-      {/* Contenido de la página */}
       <main className={styles.main}>{children}</main>
     </>
   )

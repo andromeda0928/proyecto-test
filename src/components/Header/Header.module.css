@@ -6,21 +6,9 @@
   align-items: center;
   padding: 1.9rem 1rem;
   border-bottom: 1px solid var(--color-gray-light);
-  /* background-color: #ffffff; */
-  /* Sombra ligera para separar del contenido */
-  /* box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); */
-  /* Fijo arriba si quieres que se quede al hacer scroll */
-  /* position: sticky; */
-  /* top: 0; */
-  /* z-index: 100; */
-
-
-
-  /* position: fixed;
-  z-index: 1000;
-  top: 0;
-  width: 100%;
-  background-color: var(--color-white); */
+  /* Si necesitas fondo blanco: background-color: var(--color-white); */
+  /* Sombra ligera: box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); */
+  /* Para sticky: position: sticky; top: 0; z-index: 100; */
 }
 
 /* Hace clickeable el área del logo y centra su contenido */
@@ -32,8 +20,8 @@
 /* Contenedor que define ancho/alto del logo para Image(fill) */
 .logoWrapper {
   position: relative;
-  width: 2.5rem;   /* ancho deseado */
-  height: 2.5rem;  /* alto deseado */
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 /* La propia imagen: mantiene proporción sin deformarse */
@@ -46,20 +34,14 @@
 .backButton {
   display: inline-block;
   padding: 0.8rem 1.2rem;
-  background-color: var(--color-primary); /* morado vibrante */
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   font-weight: 600;
   text-decoration: none;
   border-radius: 0.5rem;
   font-size: 0.875rem; /* 14px */
   line-height: 1;
   transition: background-color 0.2s ease;
+  font-family: poppins, sans-serif;
 }
 
-.backButton:hover {
-  background-color: red;
-}
-
-/* .main {
-  padding-top: 4rem;
-} */
